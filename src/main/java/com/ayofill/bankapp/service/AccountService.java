@@ -1,6 +1,7 @@
 package com.ayofill.bankapp.service;
 
 import com.ayofill.bankapp.model.Account;
+import com.ayofill.bankapp.model.Transaction;
 import com.ayofill.bankapp.util.Util;
 
 /**
@@ -17,17 +18,17 @@ public class AccountService {
      * 1. Name
      * 2. AccountBalance greater than 0
      * 3. Account Number
-     * 4. Address (Field doesn't exist now, add it)
-     * 5. Account is active
+     * 4. Account is active
      *
      * @param account new account to be added to the database.
      */
-    public void addAccount(Account account) {
+    public String addAccount(Account account) {
         throw new IllegalArgumentException("Not implemented");
     }
 
     /**
-     * When an account holder closes his/her account, the account should be removed from active accounts database and added to d
+     * When an account holder closes his/her account, the account
+     * should be removed from active accounts database and added to the
      * archived accounts database #Util.archivedAccount
      *
      * @param accountNumber of account to be deleted.
@@ -37,11 +38,11 @@ public class AccountService {
     }
 
     /**
-     * Search throw the database to check if account whose number was orovided is present.
+     * Search throw the database to check if account whose number was provided is present.
      * <p>
      * If details not found in active account db, check archived account otherwise throw exception that account was not found
      *
-     * @param accountNumber to retrive
+     * @param accountNumber to retrieve
      * @return Account was detail was provided
      */
     public Account getAccountDetails(String accountNumber) {
@@ -75,7 +76,7 @@ public class AccountService {
      * The following validation should be done
      * 1. Check if amount is valid
      * 2. check if payerAccountNumber is valid
-     * 3. Check if amount exceeds fromAccount balance
+     * 3. Check if amount exceeds payerAccountNumber balance
      * 4. Check if payeeAccountNumber exist
      * 5. log transaction details (create new database for transaction, new class to hold transaction details)
      *
@@ -91,15 +92,28 @@ public class AccountService {
     /**
      * Deposit money into an account
      * <p>
-     * 1. Ensure account number is valid
-     * 2. Ensure amount is valid
-     * 3. Log transaction
+     * 1. Ensure amount is valid
+     * 2. Ensure account number is valid
+     * 3. Update account if 1 and 2 is success
+     * 4. Log transaction
      *
      * @param accountNumber details of account to deposit to
-     * @param amount        transaction amout
+     * @param amount        transaction amount
      * @return deposit details
      */
     public String deposit(String accountNumber, Double amount) {
-        throw new IllegalArgumentException("Not implemented");
+        //Check if amount is valid
+        if (amount <= 0) return "Invalid amount";
+        //Ensure account number is valid
+        Account account = Util.accounts.remove(accountNumber);
+        if (account == null) return "Invalid Account Number";
+        //Compute new balance
+        Double newBalance = account.getBalance() + amount;
+        account.setBalance(newBalance);
+        //Log Transaction
+        Util.transactions.get(Util.DEPOSIT).add(new Transaction(accountNumber, null, amount));
+        //Update account
+        Util.accounts.put(accountNumber, account);
+        return "Deposit complete";
     }
 }
