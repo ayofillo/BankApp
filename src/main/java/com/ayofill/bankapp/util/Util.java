@@ -23,13 +23,13 @@ public class Util {
 
     static {
         //Initialize with dummy accounts
-        accounts.put("12345", new Account("12345", "John Bill", 5430000.0));
-        accounts.put("775866", new Account("775866", "Amazon Bezos", 59800000.0));
-        accounts.put("135856", new Account("135856", "Facebook Mark", 9150000.0));
-        accounts.put("003948", new Account("003948", "Microsoft Gate", 55120000.0));
+        accounts.put("12345", new Account("12345", "John Bill", 5430000.0, true));
+        accounts.put("775866", new Account("775866", "Amazon Bezos", 59800000.0, true));
+        accounts.put("135856", new Account("135856", "Facebook Mark", 9150000.0, true));
+        accounts.put("003948", new Account("003948", "Microsoft Gate", 55120000.0, true));
 
         //Initialize with dummy accounts
-        archivedAccount.put("6643375", new Account("6643375", "Instagram User", 57840000.0));
+        archivedAccount.put("6643375", new Account("6643375", "Instagram User", 57840000.0, true));
 
         //Initialize with dummy transactions
         transactions.put(TRANSFER, new ArrayList<>());

@@ -9,10 +9,11 @@ public class Account {
     private Double balance;
     private Boolean active;
 
-    public Account(String accountNumber, String name, Double balance) {
+    public Account(String accountNumber, String name, Double balance, boolean isActive) {
         this.accountNumber = accountNumber;
         this.name = name;
         this.balance = balance;
+        this.active = isActive;
     }
 
     public Boolean getActive() {
