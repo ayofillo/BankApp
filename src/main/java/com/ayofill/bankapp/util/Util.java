@@ -35,9 +35,10 @@ public class Util {
         transactions.put(TRANSFER, new ArrayList<>());
         transactions.put(BILL, new ArrayList<>());
         transactions.put(DEPOSIT, new ArrayList<>());
+
         transactions.get(TRANSFER).add(new Transaction("12345", "775866", 5000.0));
         transactions.get(BILL).add(new Transaction("12345", "003948", 5000.0));
-        transactions.get(DEPOSIT).add(new Transaction("003948", null, 900000.0));
+        transactions.get(DEPOSIT).add(new Transaction("cash in/cheque", "003948", 900000.0));
     }
 
 }
