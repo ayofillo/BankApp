@@ -15,7 +15,7 @@ public class Application {
          * 3. Deposit funds in the account
          * 4. transfer funds from one account to another
          * 5. Pay some bills
-         * 6. Delete the account
+         * 6. close the account
          */
     }
 }

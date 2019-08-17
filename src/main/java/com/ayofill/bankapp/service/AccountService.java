@@ -10,20 +10,33 @@ import com.ayofill.bankapp.util.Util;
  * @author afilegbe
  */
 public class AccountService {
+
     /**
-     * This method will be used to add new account to the database #Util.accounts
-     * Validation should be in place to ensure basic details of an account is added
+     * Deposit money into an account
      * <p>
-     * This include;
-     * 1. Name
-     * 2. AccountBalance greater than 0
-     * 3. Account Number
-     * 4. Account is active
+     * 1. Ensure amount is valid
+     * 2. Ensure account number is valid
+     * 3. Update account if 1 and 2 is success
+     * 4. Log transaction
      *
-     * @param account new account to be added to the database.
+     * @param accountNumber details of account to deposit to
+     * @param amount        transaction amount
+     * @return deposit details
      */
-    public String addAccount(Account account) {
-        throw new IllegalArgumentException("Not implemented");
+    public String deposit(String accountNumber, Double amount) {
+        //Check if amount is valid
+        if (amount <= 0) return "Invalid amount";
+        //Ensure account number is valid
+        Account account = Util.accounts.remove(accountNumber);
+        if (account == null) return "Invalid Account Number";
+        //Compute new balance
+        Double newBalance = account.getBalance() + amount;
+        account.setBalance(newBalance);
+        //Log Transaction
+        Util.transactions.get(Util.DEPOSIT).add(new Transaction("cash in/cheque", accountNumber, amount));
+        //Update account
+        Util.accounts.put(accountNumber, account);
+        return "Deposit complete";
     }
 
     /**
@@ -33,21 +46,51 @@ public class AccountService {
      *
      * @param accountNumber of account to be deleted.
      */
-    public void delete(String accountNumber) {
-        throw new IllegalArgumentException("Not implemented");
+    public String close(String accountNumber) {
+        //Check if account exist
+        Account account = Util.accounts.remove(accountNumber);
+        if (account == null) return "Account number doesn't exist";
+        account.setActive(false);
+        // archive account
+        Util.archivedAccount.put(accountNumber, account);
+        //Log Transaction
+        Util.transactions.get(Util.CLOSE).add(new Transaction(accountNumber, null, null));
+        return "Account deleted successfully";
     }
 
     /**
-     * Search throw the database to check if account whose number was provided is present.
-     * <p>
-     * If details not found in active account db, check archived account otherwise throw exception that account was not found
+     * Search throw the database(active) to check if account whose number was provided is present.
      *
      * @param accountNumber to retrieve
      * @return Account was detail was provided
      */
     public Account getAccountDetails(String accountNumber) {
-        //This is a naive implementation. Ensure all mentioned in note above is done
         return Util.accounts.get(accountNumber);
+    }
+    /**
+     * Search throw the database(archive) to check if account whose number was provided is present.
+     *
+     * @param accountNumber to retrieve
+     * @return Account was detail was provided
+     */
+    public Account getAccountDetailsArchived(String accountNumber) {
+        return Util.archivedAccount.get(accountNumber);
+    }
+
+    /**
+     * This method will be used to add new account to the database #Util.accounts
+     * Validation should be in place to ensure basic details of an account is added
+     * <p>
+     * This include;
+     * 1. Name
+     * 2. AccountBalance equal or greater than 0
+     * 3. Account Number
+     * 4. Account is active
+     *
+     * @param account new account to be added to the database.
+     */
+    public String addAccount(Account account) {
+        throw new IllegalArgumentException("Not implemented");
     }
 
     /**
@@ -78,7 +121,7 @@ public class AccountService {
      * 2. check if payerAccountNumber is valid
      * 3. Check if amount exceeds payerAccountNumber balance
      * 4. Check if payeeAccountNumber exist
-     * 5. log transaction details (create new database for transaction, new class to hold transaction details)
+     * 5. log transaction details
      *
      * @param payerAccountNumber account to pay from
      * @param payeeAccountNumber account to pay to
@@ -87,33 +130,5 @@ public class AccountService {
      */
     public String payBill(String payerAccountNumber, String payeeAccountNumber, Double amount) {
         throw new IllegalArgumentException("Not implemented");
-    }
-
-    /**
-     * Deposit money into an account
-     * <p>
-     * 1. Ensure amount is valid
-     * 2. Ensure account number is valid
-     * 3. Update account if 1 and 2 is success
-     * 4. Log transaction
-     *
-     * @param accountNumber details of account to deposit to
-     * @param amount        transaction amount
-     * @return deposit details
-     */
-    public String deposit(String accountNumber, Double amount) {
-        //Check if amount is valid
-        if (amount <= 0) return "Invalid amount";
-        //Ensure account number is valid
-        Account account = Util.accounts.remove(accountNumber);
-        if (account == null) return "Invalid Account Number";
-        //Compute new balance
-        Double newBalance = account.getBalance() + amount;
-        account.setBalance(newBalance);
-        //Log Transaction
-        Util.transactions.get(Util.DEPOSIT).add(new Transaction(accountNumber, null, amount));
-        //Update account
-        Util.accounts.put(accountNumber, account);
-        return "Deposit complete";
     }
 }
